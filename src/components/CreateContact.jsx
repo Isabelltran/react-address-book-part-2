@@ -33,7 +33,7 @@ function CreateContact({addContact}) {
       <label htmlFor="street">Street:</label>
       <input type="text" id="street" name="street" value={street} onChange={(e) => setStreet(e.target.value)} required />
 
-      <label htmlFor="city">Cty:</label>
+      <label htmlFor="city">City:</label>
       <input type="text" id="city" name="city" value={city} onChange={(e) => setCity(e.target.value)} required />
      
       <button type ="submit">Create</button>

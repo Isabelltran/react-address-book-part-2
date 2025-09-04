@@ -1,12 +1,15 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function DeleteProfile({deleteContact}) {
     const [id, setId] = useState("");
+    const navigate = useNavigate();
 
     async function handleSubmit(event) {
         event.preventDefault();
         await deleteContact(Number(id));
         setId("");
+        navigate("/");
     }
   return (
     <><h3>Delete Profile</h3><form onSubmit={handleSubmit}>

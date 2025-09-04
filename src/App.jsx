@@ -6,6 +6,7 @@ import PersonProfile from './components/PersonProfile';
 import CreateContact from './components/CreateContact';
 import { Link } from 'react-router-dom';
 import DeleteProfile from './components/DeleteProfile';
+import UpdateContact from './components/UpdateContact';
 
 function App() {
 
@@ -58,6 +59,32 @@ function App() {
       console.error("Fail:", error);
     }
   };
+
+  const updateContact = async (updatePerson) => {
+    try {
+      const response = await fetch(`${url}/${updatePerson.id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updatePerson),
+      });
+
+      if (!response.ok) {
+        throw new Error("Fail to save in API");
+      }
+
+      const savedPerson = await response.json();
+
+      setData((prev) =>
+      prev.map((person) =>
+        person.id === savedPerson.id ? savedPerson : person
+      )
+    );
+    } catch (error) {
+      console.error("Fail:", error);
+    }
+  };
     return (
         <>
             <div className="App">
@@ -68,6 +95,7 @@ function App() {
                     <li><Link to="/">Contacts List</Link></li>
                     <li><Link to="/Createprofile">Add new Contact</Link></li>
                     <li><Link to="/Deleteprofile">Delete Contact</Link></li>
+                    <li><Link to="/Updateprofile">Update Contact</Link></li>
 
                 </ul>
                 </nav>
@@ -79,6 +107,7 @@ function App() {
                 <Route path="/:id" element={<PersonProfile data={data} />} />
                 <Route path="/Createprofile" element={<CreateContact addContact={addContact}/>} />
                 <Route path="/Deleteprofile" element={<DeleteProfile deleteContact={deleteContact}/>} />
+                <Route path="/Updateprofile" element={<UpdateContact data = {data} update={updateContact}/>} />
                 </Routes>
             </main>
             </div>
