@@ -1,8 +1,68 @@
 import './App.css';
+import ContactList from './components/ContactList';
+import { useState, useEffect } from 'react';
+import {Route, Routes} from 'react-router-dom';
+import PersonProfile from './components/PersonProfile';
+import CreateContact from './components/CreateContact';
+import { Link } from 'react-router-dom';
 
 function App() {
+
+    const url ="https://boolean-uk-api-server.fly.dev/isabelltran/contact"
+    const [data, setData] = useState([]);
+
+    useEffect(() => {
+    const fetchData = async () => {
+      const response = await fetch(url);
+      const jsonData = await response.json();
+      setData(jsonData);
+  };
+  fetchData();
+  }, []);
+
+  const addContact = async (newPerson) => {
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newPerson),
+      });
+
+      if (!response.ok) {
+        throw new Error("Fail to save in API");
+      }
+
+      const savedPerson = await response.json();
+
+      setData((prev) => [...prev, savedPerson]);
+    } catch (error) {
+      console.error("Fail:", error);
+    }
+  };
     return (
-        <p>Hello, world!</p>
+        <>
+            <div className="App">
+            <aside className="Sidebar">
+                <h2>Menu</h2>
+                <nav>
+                <ul>
+                    <li><Link to="/">Contacts List</Link></li>
+                    <li><Link to="/Createprofile">Add new Contact</Link></li>
+                </ul>
+                </nav>
+            </aside>
+
+            <main className="Content">
+                <Routes>
+                <Route path="/" element={<ContactList people={data} />} />
+                <Route path="/:id" element={<PersonProfile data={data} />} />
+                <Route path="/Createprofile" element={<CreateContact addContact={addContact}/>} />
+                </Routes>
+            </main>
+            </div>
+        </>
     );
 }
 
