@@ -5,6 +5,7 @@ import {Route, Routes} from 'react-router-dom';
 import PersonProfile from './components/PersonProfile';
 import CreateContact from './components/CreateContact';
 import { Link } from 'react-router-dom';
+import DeleteProfile from './components/DeleteProfile';
 
 function App() {
 
@@ -40,6 +41,22 @@ function App() {
     } catch (error) {
       console.error("Fail:", error);
     }
+};
+
+    const deleteContact = async (id) => {
+    try {
+      const response = await fetch(url, {    
+        method: "DELETE",
+      });
+
+      if (!response.ok) {
+        throw new Error("Fail to save in API");
+      }
+
+      setData((prev) => prev.filter((person) => person.id !== id));
+    } catch (error) {
+      console.error("Fail:", error);
+    }
   };
     return (
         <>
@@ -50,6 +67,8 @@ function App() {
                 <ul>
                     <li><Link to="/">Contacts List</Link></li>
                     <li><Link to="/Createprofile">Add new Contact</Link></li>
+                    <li><Link to="/Deleteprofile">Delete Contact</Link></li>
+
                 </ul>
                 </nav>
             </aside>
@@ -59,6 +78,7 @@ function App() {
                 <Route path="/" element={<ContactList people={data} />} />
                 <Route path="/:id" element={<PersonProfile data={data} />} />
                 <Route path="/Createprofile" element={<CreateContact addContact={addContact}/>} />
+                <Route path="/Deleteprofile" element={<DeleteProfile deleteContact={deleteContact}/>} />
                 </Routes>
             </main>
             </div>
